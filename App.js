@@ -1,24 +1,30 @@
-import "react-native-gesture-handler";
-import {registerRootComponent} from "expo";
-import {NavigationContainer} from "@react-navigation/native";
-import {createStackNavigator} from "@react-navigation/stack";
-import {HomeScreen} from "./Home.js";
-
-export default function App() {
-
-  const Stack = createStackNavigator();
+import React, { } from 'react';
+import {
+  View, StyleSheet, StatusBar, LogBox
+} from 'react-native';
+import AppContainer from './src/navigator/AppNavigator';
+LogBox.ignoreAllLogs(true)
+export default function RNApp() {
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          options={{headerShown: false}}
-          component={HomeScreen}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+    <View style={styles.container}>
+      <StatusBar backgroundColor={"#f7fbfc"} barStyle='dark-content' />
+      <AppContainer />
+    </View>
+  )
 }
 
-registerRootComponent(App);
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#f7fbfc",
+  },
+  textInput: {
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    color: "black",
+    marginVertical: 20,
+    marginHorizontal: 10
+  }
+})
