@@ -5,6 +5,9 @@ import BluetoothMainScreen from "../screens/MainScreen";
 import { navigationRef } from "./NavigationService";
 import BluetoothModule from "../screens/Home";
 import Wallet from "../screens/Wallet";
+import {ImportWalletScreen} from "../screens/ImportWallet";
+import {CreateWalletScreen} from "../screens/CreateWallet";
+import {CreateWalletCheckScreen} from "../screens/CreateWalletCheck";
 
 
 const Stack = createStackNavigator();
@@ -18,6 +21,9 @@ function AppContainer() {
                 }}
             >
                 <Stack.Screen name="Wallet" component={Wallet} />
+                <Stack.Screen name="ImportWallet" component={ImportWalletScreen} />
+                <Stack.Screen name="CreateWallet" component={CreateWalletScreen} />
+                <Stack.Screen name="CreateWalletCheck" component={CreateWalletCheckScreen} />
                 {/* <Stack.Screen name="BluetoothModule" component={BluetoothModule} />
                 <Stack.Screen name="BluetoothMainScreen" component={BluetoothMainScreen} /> */}
             </Stack.Navigator>
