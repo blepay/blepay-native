@@ -280,6 +280,11 @@ import { TabView, SceneMap } from "react-native-tab-view";
 const Wallet = (props) => {
   const [index, setIndex] = React.useState(0);
   const navigation = useNavigation();
+
+  const enterImportWallet = () => {
+    navigation.push("ImportWallet");
+  };
+
   return (
     <View
       style={{
@@ -338,7 +343,7 @@ const Wallet = (props) => {
           ]}
         >
           <View>
-            <TouchableOpacity style={[styles.operationIcon]}>
+            <TouchableOpacity style={[styles.operationIcon]} onPress={enterImportWallet}>
               <Image
                 source={require("../assets/images/receive.png")}
                 style={{

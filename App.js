@@ -3,6 +3,7 @@ import {
   View, StyleSheet, StatusBar, LogBox
 } from 'react-native';
 import AppContainer from './src/navigator/AppNavigator';
+import 'react-native-gesture-handler';
 LogBox.ignoreAllLogs(true)
 export default function RNApp() {
 
