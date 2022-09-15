@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 
-const BluetoothModule = ({}) => {
+const Home = ({}) => {
   const navigation = useNavigation();
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -40,7 +40,7 @@ const BluetoothModule = ({}) => {
   );
 };
 
-export default BluetoothModule;
+export default Home;
 
 const styles = StyleSheet.create({
   container: {

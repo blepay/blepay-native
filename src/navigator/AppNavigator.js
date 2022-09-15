@@ -8,7 +8,8 @@ import Wallet from "../screens/Wallet";
 import {ImportWalletScreen} from "../screens/ImportWallet";
 import {CreateWalletScreen} from "../screens/CreateWallet";
 import {CreateWalletCheckScreen} from "../screens/CreateWalletCheck";
-
+import CreateDomain from "../screens/createDomain";
+import RegisterDomain from "../screens/RegisterDomain";
 
 const Stack = createStackNavigator();
 
@@ -20,12 +21,14 @@ function AppContainer() {
                     headerShown: false,
                 }}
             >
+                <Stack.Screen name="BluetoothModule" component={BluetoothModule} />
+                <Stack.Screen name="BluetoothMainScreen" component={BluetoothMainScreen} />
                 <Stack.Screen name="Wallet" component={Wallet} />
                 <Stack.Screen name="ImportWallet" component={ImportWalletScreen} />
                 <Stack.Screen name="CreateWallet" component={CreateWalletScreen} />
                 <Stack.Screen name="CreateWalletCheck" component={CreateWalletCheckScreen} />
-                {/* <Stack.Screen name="BluetoothModule" component={BluetoothModule} />
-                <Stack.Screen name="BluetoothMainScreen" component={BluetoothMainScreen} /> */}
+                <Stack.Screen name="CreateDomain" component={CreateDomain} />
+                <Stack.Screen name="RegisterDomain" component={RegisterDomain} />
             </Stack.Navigator>
         </NavigationContainer>
     )

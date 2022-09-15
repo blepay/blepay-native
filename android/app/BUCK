@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.BlePay",
+    package = "com.blepay",
 )
 
 android_resource(
     name = "res",
-    package = "com.BlePay",
+    package = "com.blepay",
     res = "src/main/res",
 )
 

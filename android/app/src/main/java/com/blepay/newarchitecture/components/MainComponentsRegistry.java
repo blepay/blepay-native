@@ -1,4 +1,4 @@
-package com.BlePay.newarchitecture.components;
+package com.blepay.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

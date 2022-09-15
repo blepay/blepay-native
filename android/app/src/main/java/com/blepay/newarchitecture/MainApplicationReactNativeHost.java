@@ -1,4 +1,4 @@
-package com.BlePay.newarchitecture;
+package com.blepay.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.BlePay.BuildConfig;
-import com.BlePay.newarchitecture.components.MainComponentsRegistry;
-import com.BlePay.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.blepay.BuildConfig;
+import com.blepay.newarchitecture.components.MainComponentsRegistry;
+import com.blepay.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 
