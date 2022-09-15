@@ -15,7 +15,7 @@ import {
 const windowWidth = Dimensions.get('window').width;
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
-const createDomain = ({}) => {
+const DomainHome = ({}) => {
   const navigation = useNavigation();
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -82,7 +82,7 @@ const createDomain = ({}) => {
   );
 };
 
-export default createDomain;
+export default DomainHome;
 
 const styles = StyleSheet.create({
   container: {
