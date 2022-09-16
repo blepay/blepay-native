@@ -2,8 +2,16 @@ import {Dimensions, Image, StyleSheet, Text, TouchableOpacity, View} from "react
 import React, {useEffect, useState} from "react";
 import {AS_CREATE_WALLET_WORDS, getData} from "../utils/StorageUtils";
 import {saveMnemonic} from "../wallet/WalletHandler";
-
-const windowWidth = Dimensions.get("window").width;
+import {
+  useFonts,
+  ReadexPro_200ExtraLight,
+  ReadexPro_300Light,
+  ReadexPro_400Regular,
+  ReadexPro_500Medium,
+  ReadexPro_600SemiBold,
+  ReadexPro_700Bold,
+} from '@expo-google-fonts/readex-pro';
+const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get("window").height;
 
 export function CreateWalletCheckScreen({navigation}) {
@@ -125,25 +133,31 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   topBarTitle: {
-    fontSize: 15,
+    fontSize: 15/390 * windowWidth,
+    fontFamily: 'ReadexPro_600SemiBold',
     color: 'black'
   },
   logo: {
     width: 52,
     height: 41,
-    marginTop: 40
+    // marginTop: 40/390 * windowWidth
   },
   logoText: {
-    color: 'black'
+    color: '#2A245F',
+    marginBottom: 18/390 * windowWidth,
+    fontFamily: 'ReadexPro_400Regular'
   },
   warning: {
-    fontSize: 12,
+    fontSize: 12/390 * windowWidth,
     color: '#BA1B1B',
-    paddingHorizontal: 24,
-    paddingVertical: 16,
+    fontFamily: 'ReadexPro_500Medium',
+    width: 342/390 * windowWidth,
+    textAlign: 'left',
+    // paddingHorizontal: 24,
+    // paddingVertical: 16,
   },
   textArea: {
-    width: 342,
+    width: 342/390 * windowWidth,
     height: 130,
     borderWidth: 1,
     borderColor: '#94A3B8',
@@ -156,18 +170,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     marginTop: 28,
-    marginLeft: 30
+    marginLeft: 30,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#fff',
   },
   wordListButton: {
     marginBottom: 15 / 390 * windowWidth,
     marginRight: 12,
     backgroundColor: '#EFF6FF',
     paddingVertical: 6,
-    paddingHorizontal: 12
+    paddingHorizontal: 12,
+    fontFamily: 'ReadexPro_400Regular'
   },
   wordListButtonSelected: {
     marginBottom: 15 / 390 * windowWidth,
     marginRight: 12,
+    fontFamily: 'ReadexPro_400Regular',
     backgroundColor: '#DFE1E3',
     paddingVertical: 6,
     paddingHorizontal: 12
@@ -188,7 +207,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,
-    marginTop: 36,
+    // marginTop: 36,
     opacity: 0
   },
   button: {
@@ -197,6 +216,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     backgroundColor: '#58C0E1',
     color: 'white',
-    marginTop: 28,
+    fontFamily: 'ReadexPro_400Regular'
+    // marginTop: 28,
   }
 });
