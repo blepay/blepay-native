@@ -1,7 +1,7 @@
 import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View, Dimensions} from "react-native";
 import React, {useState} from "react";
 import {generateMnemonic} from "../wallet/WalletHandler";
-import AppLoading from 'expo-app-loading';
+
 import {AS_CREATE_WALLET_WORDS, setData} from "../utils/StorageUtils";
 import {
   useFonts,
@@ -45,7 +45,7 @@ export function CreateWalletScreen({navigation}) {
     navigation.push('CreateWalletCheck');
   }
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return <View></View>;
   } else {
   return (
     <View style={styles.container}>

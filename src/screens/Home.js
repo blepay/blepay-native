@@ -21,7 +21,7 @@ import {
   ReadexPro_600SemiBold,
   ReadexPro_700Bold,
 } from '@expo-google-fonts/readex-pro';
-import AppLoading from 'expo-app-loading';
+
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -36,7 +36,7 @@ const Home = ({}) => {
   });
   const navigation = useNavigation();
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return <View></View>;
   } else {
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>

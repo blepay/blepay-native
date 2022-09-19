@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-// import AppLoading from 'expo-app-loading';
+// 
 import {
   useFonts,
   Montserrat_400Regular,
@@ -84,7 +84,7 @@ export default function RegisterDomain({ navigation }) {
   };
 
   if (false) {
-    return <AppLoading />;
+    return <View></View>;
   } else
     return (
       <View style={styles.container}>
