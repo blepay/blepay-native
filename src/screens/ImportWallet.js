@@ -1,6 +1,16 @@
-import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View, Dimensions} from "react-native";
 import React, {useState} from "react";
 import {saveMnemonic} from "../wallet/WalletHandler";
+import {
+  useFonts,
+  ReadexPro_200ExtraLight,
+  ReadexPro_300Light,
+  ReadexPro_400Regular,
+  ReadexPro_500Medium,
+  ReadexPro_600SemiBold,
+  ReadexPro_700Bold,
+} from '@expo-google-fonts/readex-pro';
+const windowWidth = Dimensions.get('window').width;
 
 export function ImportWalletScreen({navigation}) {
 
@@ -65,20 +75,39 @@ const styles = StyleSheet.create({
     width: 12,
     height: 20,
   },
+  topBar: {
+    width: '100%',
+    height: 60,
+    // marginTop: 30/390 * windowWidth,
+    alignItems: "center",
+    justifyContent: "center"
+  },
   topBarTitle: {
-    fontSize: 15,
+    fontSize: 15/390 * windowWidth,
+    fontFamily: 'ReadexPro_600SemiBold',
     color: 'black'
   },
   logo: {
     width: 52,
     height: 41,
-    marginTop: 40
+    // marginTop: 40/390 * windowWidth
   },
   logoText: {
-    color: 'black'
+    color: '#2A245F',
+    marginBottom: 18/390 * windowWidth,
+    fontFamily: 'ReadexPro_400Regular'
+  },
+  warning: {
+    fontSize: 12/390 * windowWidth,
+    color: '#BA1B1B',
+    fontFamily: 'ReadexPro_500Medium',
+    width: 342/390 * windowWidth,
+    textAlign: 'left',
+    // paddingHorizontal: 24,
+    // paddingVertical: 16,
   },
   input: {
-    width: 342,
+    width: 342/390 * windowWidth,
     height: 168,
     backgroundColor: '#F8FAFC',
     borderBottomColor: '#CBD5E1',
@@ -114,5 +143,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#58C0E1',
     color: 'white',
     marginTop: 28,
+    fontFamily: 'ReadexPro_400Regular'
   }
 });

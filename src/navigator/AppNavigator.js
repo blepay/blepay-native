@@ -8,7 +8,7 @@ import Wallet from "../screens/Wallet";
 import {ImportWalletScreen} from "../screens/ImportWallet";
 import {CreateWalletScreen} from "../screens/CreateWallet";
 import {CreateWalletCheckScreen} from "../screens/CreateWalletCheck";
-import CreateDomain from "../screens/createDomain";
+import DomainHome from "../screens/DomainHome";
 import RegisterDomain from "../screens/RegisterDomain";
 
 const Stack = createStackNavigator();
@@ -27,7 +27,7 @@ function AppContainer() {
                 <Stack.Screen name="ImportWallet" component={ImportWalletScreen} />
                 <Stack.Screen name="CreateWallet" component={CreateWalletScreen} />
                 <Stack.Screen name="CreateWalletCheck" component={CreateWalletCheckScreen} />
-                <Stack.Screen name="CreateDomain" component={CreateDomain} />
+                <Stack.Screen name="DomainHome" component={DomainHome} />
                 <Stack.Screen name="RegisterDomain" component={RegisterDomain} />
             </Stack.Navigator>
         </NavigationContainer>
