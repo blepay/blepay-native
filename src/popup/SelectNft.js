@@ -2,40 +2,37 @@ import React from "react";
 import { useState, Component, useEffect } from "react";
 
 import {
-  Modal,
   StyleSheet,
-  TextInput,
   View,
   TouchableOpacity,
-  TouchableHighlight,
   SafeAreaView,
   FlatList,
   Image,
   Text,
   Dimensions,
 } from "react-native";
-import { isEmpty } from "../common/publicMethod";
+import { isEmpty } from "../common/PublicMethod";
 import {
-    useFonts,
+  useFonts,
+  ReadexPro_200ExtraLight,
+  ReadexPro_300Light,
+  ReadexPro_400Regular,
+  ReadexPro_500Medium,
+  ReadexPro_600SemiBold,
+  ReadexPro_700Bold,
+} from "@expo-google-fonts/readex-pro";
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
+
+export const SelectNft = (props) => {
+  let [fontsLoaded] = useFonts({
     ReadexPro_200ExtraLight,
     ReadexPro_300Light,
     ReadexPro_400Regular,
     ReadexPro_500Medium,
     ReadexPro_600SemiBold,
     ReadexPro_700Bold,
-  } from "@expo-google-fonts/readex-pro";
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
-
-export const SelectNft = (props) => {
-    let [fontsLoaded] = useFonts({
-        ReadexPro_200ExtraLight,
-        ReadexPro_300Light,
-        ReadexPro_400Regular,
-        ReadexPro_500Medium,
-        ReadexPro_600SemiBold,
-        ReadexPro_700Bold,
-      });
+  });
 
   const { setSelectedMonster } = props;
   const [selectedItem, setSelectedItem] = useState({});
@@ -43,43 +40,43 @@ export const SelectNft = (props) => {
 
   React.useEffect(() => {
     setnftList([
-        {
-            type: 'Doodles',
-            id: '#9391'
-        },
-        {
-            type: 'Doodles',
-            id: '#9392'
-        },
-        {
-            type: 'Doodles',
-            id: '#9377'
-        },
-        {
-            type: 'Doodles',
-            id: '#9222'
-        },
-        {
-            type: 'Doodles',
-            id: '#7777'
-        },
-        {
-            type: 'Doodles',
-            id: '#99'
-        },
-        {
-            type: 'Doodles',
-            id: '#9'
-        },
-        {
-            type: 'Doodles',
-            id: '#1'
-        },
-        {
-            type: 'Doodles',
-            id: '#9671'
-        },
-    ])
+      {
+        type: "Doodles",
+        id: "#9391",
+      },
+      {
+        type: "Doodles",
+        id: "#9392",
+      },
+      {
+        type: "Doodles",
+        id: "#9377",
+      },
+      {
+        type: "Doodles",
+        id: "#9222",
+      },
+      {
+        type: "Doodles",
+        id: "#7777",
+      },
+      {
+        type: "Doodles",
+        id: "#99",
+      },
+      {
+        type: "Doodles",
+        id: "#9",
+      },
+      {
+        type: "Doodles",
+        id: "#1",
+      },
+      {
+        type: "Doodles",
+        id: "#9671",
+      },
+    ]);
   }, []);
 
   const selectCurrentMonster = (item) => {
@@ -107,7 +104,7 @@ export const SelectNft = (props) => {
           <Image
             source={require("../assets/images/nft.png")}
             style={{
-              width: '100%',
+              width: "100%",
               height: (80 / 390) * windowWidth,
             }}
           />
@@ -151,7 +148,7 @@ export const SelectNft = (props) => {
         />
       </SafeAreaView>
       <View style={[styles.scrollBox]}>
-      <TouchableOpacity
+        <TouchableOpacity
           style={[styles.button, styles.cancelBtn]}
           onPress={() => navigation.navigate("ImportWallet")}
         >
@@ -217,7 +214,7 @@ const styles = StyleSheet.create({
   },
   fSize16Black: {
     fontFamily: "Gluten_500Medium",
-    fontSize: 16/390 * windowWidth,
+    fontSize: (16 / 390) * windowWidth,
     color: "#000000",
   },
   scrollBox: {
@@ -233,7 +230,7 @@ const styles = StyleSheet.create({
   monsterCardOperationBox: {
     position: "absolute",
     left: 10,
-    bottom: '2%',
+    bottom: "2%",
     width: "100%",
     height: (42 / 390) * windowWidth,
     flexDirection: "column",
@@ -241,7 +238,7 @@ const styles = StyleSheet.create({
   },
   fSize12Black: {
     fontFamily: "Gluten_400Regular",
-    fontSize: 12/390 * windowWidth,
+    fontSize: (12 / 390) * windowWidth,
     color: "#000000",
   },
   selectedBorder: {
@@ -253,7 +250,7 @@ const styles = StyleSheet.create({
     width: "90%",
     top: "50%",
     paddingBottom: "5%",
-    borderRadius: 20/390 * windowWidth,
+    borderRadius: (20 / 390) * windowWidth,
     transform: [{ translateY: -0.5 }],
     backgroundColor: "white",
     position: "absolute",
@@ -283,7 +280,7 @@ const styles = StyleSheet.create({
   },
   fSize16Black: {
     fontFamily: "Gluten_700Bold",
-    fontSize: 16/390 * windowWidth,
+    fontSize: (16 / 390) * windowWidth,
     color: "#000000",
   },
   widthHeight100: {
@@ -300,7 +297,7 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderWidth: 2,
     borderColor: "#87c711",
-    borderRadius: 20/390 * windowWidth,
+    borderRadius: (20 / 390) * windowWidth,
     margin: 0,
   },
   textInput: {
@@ -309,13 +306,13 @@ const styles = StyleSheet.create({
     fontFamily: "ReadexPro_500Medium",
   },
   popupTitle: {
-    fontFamily: 'ReadexPro_400Regular',
-    fontSize: 24
+    fontFamily: "ReadexPro_400Regular",
+    fontSize: 24,
   },
   nftText: {
-    fontFamily: 'ReadexPro_500Medium',
+    fontFamily: "ReadexPro_500Medium",
     fontSize: 10,
-    color: 'black'
+    color: "black",
   },
   cancelBtn: {
     backgroundColor: "white",

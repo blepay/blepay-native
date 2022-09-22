@@ -10,13 +10,10 @@ import {
 } from "react-native";
 
 export function TrxProgressPopup({ visible, containerStyle, close, content }) {
-
-
   const [showDialog, setShowDialog] = React.useState(visible);
   React.useEffect(() => {
     setShowDialog(visible);
   }, [visible]);
-
 
   return (
     <Modal transparent visible={showDialog} statusBarTranslucent>
@@ -27,14 +24,14 @@ export function TrxProgressPopup({ visible, containerStyle, close, content }) {
         style={styles.dialogBackground}
       >
         <View style={containerStyle ? containerStyle : styles.dialogContainer}>
-            <Image
+          <Image
             source={require("../assets/images/loading.gif")}
             style={{
-                width: 68,
-                height: 68,
+              width: 68,
+              height: 68,
             }}
-            />
-            <Text>Processing transaction...</Text>
+          />
+          <Text>Processing transaction...</Text>
         </View>
       </TouchableOpacity>
     </Modal>
@@ -56,8 +53,8 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderRadius: 20,
     zIndex: 10000,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   font12BlackThin: {
     fontFamily: "Montserrat_300Light",
@@ -66,18 +63,18 @@ const styles = StyleSheet.create({
     color: "#000000",
   },
   textDeco: {
-    backgroundColor: '#DAEFA9',
-    width: '100%',
-    position: 'absolute',
+    backgroundColor: "#DAEFA9",
+    width: "100%",
+    position: "absolute",
     height: 8,
-    bottom: 0
+    bottom: 0,
   },
   titleBox: {
-    position: 'relative',
+    position: "relative",
     minWidth: 144,
-    marginLeft: 'auto',
-    overflow: 'hidden',
-    marginRight: 'auto'
+    marginLeft: "auto",
+    overflow: "hidden",
+    marginRight: "auto",
   },
   fSize16Black: {
     fontFamily: "Gluten_700Bold",

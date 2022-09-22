@@ -4,19 +4,11 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import {
   View,
   Text,
-  Animated,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   TextInput,
-  Linking,
-  TouchableWithoutFeedback,
-  FlatList,
-  Button,
-  useWindowDimensions,
   Dimensions,
   Image,
-  StatusBar,
 } from "react-native";
 import {
   useFonts,
@@ -27,9 +19,9 @@ import {
   ReadexPro_600SemiBold,
   ReadexPro_700Bold,
 } from "@expo-google-fonts/readex-pro";
-import { TrxProgressPopup } from "../popup/TrxProgressPopup";
+import { TrxProgressPopup } from "../popup/TxProgressPopup";
 import { ModalBox } from "../popup/Modal";
-import { SelectNft } from "../popup/SelectNft";
+import { SelectNft } from "../popup/SelectNFT";
 const windowWidth = Dimensions.get("window").width;
 const selectOptList = [
   {
@@ -49,9 +41,6 @@ const TokenRoute = (props) => {
   const selectDropDownOpt = (opt) => {
     setDropDownSelectOpt(opt);
     setDropDownVisible(false);
-  };
-  const closeFilterPopup = () => {
-    setFilterVisiable(false);
   };
   const [dropdownVisible, setDropDownVisible] = useState(false);
   const [dropdownSelectOpt, setDropDownSelectOpt] = useState(selectOptList[0]);
@@ -177,9 +166,9 @@ const TokenRoute = (props) => {
 
 const NftRoute = () => {
   const [isShowSpousePopup, SetSpouseSelectPopup] = useState(false);
-  const [selectedNft,SetSelectNft] = useState({
-    id: '#78',
-    type: 'Doodles'
+  const [selectedNft, SetSelectNft] = useState({
+    id: "#78",
+    type: "Doodles",
   });
   const hideSpousePopup = () => {
     SetSpouseSelectPopup(false);
@@ -200,9 +189,7 @@ const NftRoute = () => {
         alignItems: "center",
       }}
     >
-      <ModalBox
-        visible={isShowSpousePopup}
-      >
+      <ModalBox visible={isShowSpousePopup}>
         <SelectNft
           close={hideSpousePopup}
           setSelectedMonster={setSelectedMonster}
@@ -212,15 +199,15 @@ const NftRoute = () => {
         source={require("../assets/images/nft-big.png")}
         style={styles.nftCover}
       />
-      <TouchableOpacity style={styles.inputContainer}
-        onPress={showSpousePopup}
-      >
+      <TouchableOpacity style={styles.inputContainer} onPress={showSpousePopup}>
         <Image
           source={require("../assets/images/nft.png")}
           style={styles.nftSmallIcon}
         />
         <View style={styles.selectTokenBar}>
-          <Text style={styles.selectTokenText}>{selectedNft.type} {selectedNft.id}</Text>
+          <Text style={styles.selectTokenText}>
+            {selectedNft.type} {selectedNft.id}
+          </Text>
           <Image
             source={require("../assets/images/arrow-down.png")}
             style={{
@@ -242,9 +229,7 @@ const NftRoute = () => {
         </View>
       </View>
       <View style={[styles.btnList, { bottom: "3%" }]}>
-        <TouchableOpacity
-          style={[styles.button, styles.cancelBtn]}
-        >
+        <TouchableOpacity style={[styles.button, styles.cancelBtn]}>
           <Text style={[styles.textInput, { color: "#58C0E1" }]}>
             {"Cancel "}
           </Text>
