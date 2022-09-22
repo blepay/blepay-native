@@ -10,6 +10,7 @@ import {CreateWalletScreen} from "../screens/CreateWallet";
 import {CreateWalletCheckScreen} from "../screens/CreateWalletCheck";
 import DomainHome from "../screens/DomainHome";
 import RegisterDomain from "../screens/RegisterDomain";
+import SendToken from "../screens/SendToken";
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ function AppContainer() {
                     headerShown: false,
                 }}
             >
+                <Stack.Screen name="SendToken" component={SendToken} />
                 <Stack.Screen name="BluetoothModule" component={BluetoothModule} />
                 <Stack.Screen name="BluetoothMainScreen" component={BluetoothMainScreen} />
                 <Stack.Screen name="Wallet" component={Wallet} />
