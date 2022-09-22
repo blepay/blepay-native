@@ -27,119 +27,237 @@ import {
   ReadexPro_600SemiBold,
   ReadexPro_700Bold,
 } from "@expo-google-fonts/readex-pro";
+import { TrxProgressPopup } from "../popup/TrxProgressPopup";
+import { ModalBox } from "../popup/Modal";
+import { SelectNft } from "../popup/SelectNft";
 const windowWidth = Dimensions.get("window").width;
-
-const TokenRoute = () => (
-  <View style={styles.tokenPageBox}>
-    <View style={styles.inputContainer}>
-      <TextInput style={styles.input} placeholder="0.00" />
-      <View style={styles.selectTokenBar}>
-        <Image
-          source={require("../assets/images/solana.png")}
-          style={{
-            width: 24,
-            height: 24,
-          }}
-        />
-        <Text style={styles.selectTokenText}>SOL</Text>
-        <Image
-          source={require("../assets/images/arrow-down.png")}
-          style={{
-            width: 13,
-            height: 7,
-          }}
-        />
+const selectOptList = [
+  {
+    key: 0,
+    word: "USDC",
+  },
+  {
+    key: 1,
+    word: "BNB",
+  },
+  {
+    key: 2,
+    word: "ETH",
+  },
+];
+const TokenRoute = (props) => {
+  const selectDropDownOpt = (opt) => {
+    setDropDownSelectOpt(opt);
+    setDropDownVisible(false);
+  };
+  const closeFilterPopup = () => {
+    setFilterVisiable(false);
+  };
+  const [dropdownVisible, setDropDownVisible] = useState(false);
+  const [dropdownSelectOpt, setDropDownSelectOpt] = useState(selectOptList[0]);
+  return (
+    <View style={styles.tokenPageBox}>
+      <View style={styles.inputContainer}>
+        <TextInput style={styles.input} placeholder="0.00" />
+        <TouchableOpacity
+          style={styles.selectTokenBar}
+          onPress={() => setDropDownVisible(!dropdownVisible)}
+        >
+          <Image
+            source={require("../assets/images/solana.png")}
+            style={{
+              width: 24,
+              height: 24,
+            }}
+          />
+          <Text style={styles.selectTokenText}> {dropdownSelectOpt.word}</Text>
+          <Image
+            source={require("../assets/images/arrow-down.png")}
+            style={[
+              { width: 13, height: 7, marginLeft: 10 },
+              dropdownVisible ? { transform: [{ rotate: "180deg" }] } : {},
+            ]}
+          />
+        </TouchableOpacity>
       </View>
-    </View>
-    <View style={styles.balanceBox}>
-      <Text style={styles.balanceText}>Balance: 120</Text>
-    </View>
-    <View style={{ alignItems: "center" }}>
-      <Text style={styles.balanceText}>Recepient</Text>
-      <View style={styles.addrTextBox}>
-        <Text style={styles.addrText}>_cryptowoo.ble</Text>
-      </View>
-      <View>
-        <Text style={styles.realAddrText}>
-          HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH
-        </Text>
-      </View>
-    </View>
-    <View style={styles.btnList}>
       <TouchableOpacity
-        style={[styles.button, styles.cancelBtn]}
-        onPress={() => navigation.navigate("ImportWallet")}
+        style={[
+          styles.buyBtn,
+          styles.marketFilterItem,
+          {
+            width: 115,
+            height: (120 / 390) * windowWidth,
+            marginTop: 8,
+            textAlign: "center",
+            alignItems: "center",
+            justifyContent: "space-around",
+            right: 0,
+            position: "absolute",
+          },
+          !dropdownVisible ? styles.hideContainer : {},
+        ]}
+        onPress={() => setFilterVisiable(true)}
       >
-        <Text style={[styles.textInput, { color: "#58C0E1" }]}>
-          {"Cancel "}
+        <Text
+          style={[
+            styles.fSize12Black,
+            { textAlign: "center", width: "80%" },
+            dropdownSelectOpt.key === selectOptList[0].key
+              ? styles.selectedOpt
+              : {},
+          ]}
+          onPress={() => {
+            selectDropDownOpt(selectOptList[0]);
+          }}
+        >
+          {selectOptList[0].word}
+        </Text>
+        <Text
+          style={[
+            styles.fSize12Black,
+            { textAlign: "center", width: "80%" },
+            dropdownSelectOpt.key === selectOptList[1].key
+              ? styles.selectedOpt
+              : {},
+          ]}
+          onPress={() => {
+            selectDropDownOpt(selectOptList[1]);
+          }}
+        >
+          {selectOptList[1].word}
+        </Text>
+        <Text
+          style={[
+            styles.fSize12Black,
+            { textAlign: "center", width: "80%" },
+            dropdownSelectOpt.key === selectOptList[2].key
+              ? styles.selectedOpt
+              : {},
+          ]}
+          onPress={() => {
+            selectDropDownOpt(selectOptList[2]);
+          }}
+        >
+          {selectOptList[2].word}
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.button, { marginTop: (36 / 390) * windowWidth }]}
-        onPress={() => navigation.navigate("ImportWallet")}
-      >
-        <Text style={styles.textInput}>{"Confirm "}</Text>
-      </TouchableOpacity>
+      <View style={styles.balanceBox}>
+        <Text style={styles.balanceText}>Balance: 120</Text>
+      </View>
+      <View style={{ alignItems: "center" }}>
+        <Text style={styles.balanceText}>Recepient</Text>
+        <View style={styles.addrTextBox}>
+          <Text style={styles.addrText}>_cryptowoo.ble</Text>
+        </View>
+        <View>
+          <Text style={styles.realAddrText}>
+            HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH
+          </Text>
+        </View>
+      </View>
+      <View style={styles.btnList}>
+        <TouchableOpacity
+          style={[styles.button, styles.cancelBtn]}
+          onPress={() => navigation.navigate("ImportWallet")}
+        >
+          <Text style={[styles.textInput, { color: "#58C0E1" }]}>
+            {"Cancel "}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, { marginTop: (36 / 390) * windowWidth }]}
+          onPress={() => {}}
+        >
+          <Text style={styles.textInput}>{"Confirm "}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
-const NftRoute = () => (
-  <View
-    style={{
-      flex: 1,
-      alignItems: "center",
-    }}
-  >
-    <Image
-      source={require("../assets/images/nft-big.png")}
-      style={styles.nftCover}
-    />
-    <View style={styles.inputContainer}>
+const NftRoute = () => {
+  const [isShowSpousePopup, SetSpouseSelectPopup] = useState(false);
+  const [selectedNft,SetSelectNft] = useState({
+    id: '#78',
+    type: 'Doodles'
+  });
+  const hideSpousePopup = () => {
+    SetSpouseSelectPopup(false);
+    // SetBreedPopup(true);
+  };
+  const showSpousePopup = () => {
+    SetSpouseSelectPopup(true);
+    // SetBreedPopup(true);
+  };
+  const setSelectedMonster = (item) => {
+    console.log("has selected", item);
+    SetSelectNft(item);
+  };
+  return (
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+      }}
+    >
+      <ModalBox
+        visible={isShowSpousePopup}
+      >
+        <SelectNft
+          close={hideSpousePopup}
+          setSelectedMonster={setSelectedMonster}
+        />
+      </ModalBox>
       <Image
-        source={require("../assets/images/nft.png")}
-        style={styles.nftSmallIcon}
+        source={require("../assets/images/nft-big.png")}
+        style={styles.nftCover}
       />
-      <View style={styles.selectTokenBar}>
-        <Text style={styles.selectTokenText}>Doodles #9391</Text>
+      <TouchableOpacity style={styles.inputContainer}
+        onPress={showSpousePopup}
+      >
         <Image
-          source={require("../assets/images/arrow-down.png")}
-          style={{
-            width: 13,
-            height: 7,
-          }}
+          source={require("../assets/images/nft.png")}
+          style={styles.nftSmallIcon}
         />
-      </View>
-    </View>
-    <View style={{ alignItems: "center" }}>
-      <Text style={styles.balanceText}>Recepient</Text>
-      <View style={[styles.addrTextBox, { marginTop: 10, marginBottom: 10 }]}>
-        <Text style={styles.addrText}>_cryptowoo.ble</Text>
-      </View>
-      <View>
-        <Text style={styles.realAddrText}>
-          HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH
-        </Text>
-      </View>
-    </View>
-    <View style={[styles.btnList, { bottom: "3%" }]}>
-      <TouchableOpacity
-        style={[styles.button, styles.cancelBtn]}
-        onPress={() => navigation.navigate("ImportWallet")}
-      >
-        <Text style={[styles.textInput, { color: "#58C0E1" }]}>
-          {"Cancel "}
-        </Text>
+        <View style={styles.selectTokenBar}>
+          <Text style={styles.selectTokenText}>{selectedNft.type} {selectedNft.id}</Text>
+          <Image
+            source={require("../assets/images/arrow-down.png")}
+            style={{
+              width: 13,
+              height: 7,
+            }}
+          />
+        </View>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.button, { marginTop: (36 / 390) * windowWidth }]}
-        onPress={() => navigation.navigate("ImportWallet")}
-      >
-        <Text style={styles.textInput}>{"Confirm "}</Text>
-      </TouchableOpacity>
+      <View style={{ alignItems: "center" }}>
+        <Text style={styles.balanceText}>Recepient</Text>
+        <View style={[styles.addrTextBox, { marginTop: 10, marginBottom: 10 }]}>
+          <Text style={styles.addrText}>_cryptowoo.ble</Text>
+        </View>
+        <View>
+          <Text style={styles.realAddrText}>
+            HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH
+          </Text>
+        </View>
+      </View>
+      <View style={[styles.btnList, { bottom: "3%" }]}>
+        <TouchableOpacity
+          style={[styles.button, styles.cancelBtn]}
+        >
+          <Text style={[styles.textInput, { color: "#58C0E1" }]}>
+            {"Cancel "}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, { marginTop: (36 / 390) * windowWidth }]}
+        >
+          <Text style={styles.textInput}>{"Confirm "}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 const renderScene = SceneMap({
   token: TokenRoute,
@@ -190,6 +308,7 @@ const SendToken = (props) => {
     ReadexPro_700Bold,
   });
   const [index, setIndex] = React.useState(0);
+  const [isShowTrxPopup, setTrxPopupVisible] = React.useState(false);
   const navigation = useNavigation();
 
   const enterImportWallet = () => {
@@ -198,6 +317,14 @@ const SendToken = (props) => {
 
   return (
     <View style={styles.tabContainer}>
+      <TrxProgressPopup
+        visible={isShowTrxPopup}
+        content={{
+          title: "Spending Account",
+          content:
+            "Users need Solana in this account to make any purchase on the Marketplace",
+        }}
+      ></TrxProgressPopup>
       <WalletTab index={index} setIndex={setIndex} />
     </View>
   );
@@ -421,5 +548,24 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "white",
     paddingTop: getStatusBarHeight(),
+  },
+  buyBtn: {
+    backgroundColor: "white",
+    borderRadius: (20 / 390) * windowWidth,
+    fontFamily: "Gluten_700Bold",
+    textAlign: "center",
+    height: (25 / 390) * windowWidth,
+    width: 115,
+  },
+  marketFilterItem: {
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: "#87c711",
+    margin: 0,
+    width: "23.9%",
+    height: (28 / 390) * windowWidth,
+  },
+  hideContainer: {
+    display: "none",
   },
 });
