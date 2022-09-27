@@ -6,6 +6,8 @@
  */
 
 import React, {useState, useEffect} from 'react';
+import { stringToBytes } from "convert-string";
+
 import {
   StyleSheet,
   ScrollView,
@@ -221,6 +223,7 @@ const BletoothMainScreen = props => {
     BleManager.enableBluetooth()
       .then(() => {
         // Success code
+        console.log('enable')
         setBluetoothtoggle(true);
         //** Start the scanning */
         startScan();
@@ -436,41 +439,37 @@ const BletoothMainScreen = props => {
     return charCodeArr;
   };
 
-  const onPressRenameDevice = () => {
-    if (renameValue.trim() == '') {
-      alert('Please enter value');
-    } else {
-      if (selectedPeripheral) {
-        /**
-         */ /* Again checking that BLE peripheral is connected or not
-         */
-        BleManager.isPeripheralConnected(selectedPeripheral.id, [])
-          .then(res => {
-            console.log(`${selectedPeripheral.name} is connected???`, res);
+  const onPressDeviceBubble = (device) => {
+    console.log('ddd', device)
+    if (device) {
+      /**
+       */ /* Again checking that BLE peripheral is connected or not
+       */
+      BleManager.isPeripheralConnected(device.id, [])
+        .then(res => {
+          console.log(`${device.name} is connected???`, res);
 
-            if (res == false) {
-              console.log('******not connected so going to connect...........');
-              /**
-               * //*method to connect the peripheral with our app
-               */
-              BleManager.connect(selectedPeripheral.id)
-                .then(res7 => {
-                  // Success code
-                  console.log('connect started', res7);
-                  renameBlubValue();
-                })
-                .catch(error => {
-                  console.log('error---456464454->', error);
-                });
-            } else {
-              renameBlubValue();
-            }
-          })
-          .catch(error => {
-            console.log('Error--->', error);
-          });
-      } else {
-      }
+          if (res == false) {
+            console.log('******not connected so going to connect...........');
+            /**
+             * //*method to connect the peripheral with our app
+             */
+            BleManager.connect(device.id)
+              .then(res7 => {
+                // Success code
+                console.log('connect started', res7);
+                sendDataToDevice(devicw);
+              })
+              .catch(error => {
+                console.log('error---456464454->', error);
+              });
+          } else {
+            sendDataToDevice(device);
+          }
+        })
+        .catch(error => {
+          console.log('Error--->', error);
+        });
     }
   };
 
@@ -478,19 +477,22 @@ const BletoothMainScreen = props => {
    * Rename the blub name
    * Here we have to pass 19 byte array with ascii value of string as per Hardware/Peripheral Requirement.
    */
-  const renameBlubValue = () => {
-    let renameValueToRenameBlub = renameValue;
-    if (renameValueToRenameBlub.length < 19) {
-      let difference = 19 - renameValueToRenameBlub.length;
-      renameValueToRenameBlub = renameValueToRenameBlub.padEnd(19, ' ');
-    }
-
-    const valueForRenameBlub = getCharCodes(renameValueToRenameBlub);
+  const sendDataToDevice = (device) => {
+    console.log('click device', device)
+// Convert data to byte array before write/writeWithoutResponse
+    const data = stringToBytes('0xss_ble_sol');
+    console.log('send data', data);
+    BleManager.retrieveServices(device.id).then(
+      (peripheralInfo) => {
+        // Success code
+        console.log("Peripheral info:", peripheralInfo);
+      }
+    );
     BleManager.write(
-      selectedPeripheral.id,
-      serviceUUIDForWriteBlubColor,
-      characteristicUUIDForChangeBlubName,
-      valueForRenameBlub,
+      device.id,
+      '0000ffe0-0000-1000-8000-00805f9b34fb',
+      '0000ffe1-0000-1000-8000-00805f9b34fb',
+      data,
     )
       .then(characteristic => {
         ToastAndroid.show(
@@ -523,11 +525,13 @@ const BletoothMainScreen = props => {
         }
         style={styles.contentContainerStyle}>
         {list.map((device, idx) => (
-              <View style={[styles.deviceBubble, 
+              <TouchableOpacity style={[styles.deviceBubble, 
                 DevicesLocationlist[idx]
-              ]} key={device.id}>
-                <Text style={[styles.deviceName, idx === 1 ? styles.notSetDomainText : '']}>{device.id}</Text>
-              </View>
+              ]} key={device.id}
+              onPress={() => onPressDeviceBubble(device)}
+              >
+                <Text style={[styles.deviceName, idx === 1 ? styles.notSetDomainText : '']}>{device.name || device.id}</Text>
+              </TouchableOpacity>
             ))}
       </View>
       {isScanning ? <CustomLoader loading={isScanning} /> : null}
@@ -596,43 +600,6 @@ const BletoothMainScreen = props => {
                   <Text style={styles.descText}>
                     {'4. Unintstall app and reinstall again.'}
                   </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          </TouchableHighlight>
-        </Modal>
-      </View>
-
-      <View>
-        <Modal
-          visible={isRenameModalVisible}
-          animationType={'slide'}
-          onRequestClose={onRequestCloseRenameModal}
-          transparent={true}>
-          <TouchableHighlight
-            underlayColor={'transparent'}
-            onPress={onRequestCloseRenameModal}
-            style={styles.outerViewModalStyle}>
-            <TouchableOpacity
-              delayPressIn={0}
-              onPress={() => null}
-              activeOpacity={1}>
-              <View style={styles.modal}>
-                <View style={{paddingHorizontal: 20}}>
-                  <Text style={styles.troubleShotHelp}>{'Rename Blub'}</Text>
-                  <TextInput
-                    value={renameValue}
-                    onChangeText={text => setRenameValue(text)}
-                    placeholder="Enter Name"
-                    maxLength={19}
-                    placeholderTextColor={'gray'}
-                    style={styles.renameTextInput}
-                  />
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={onPressRenameDevice}>
-                    <Text style={styles.textInput}>{'Rename'}</Text>
-                  </TouchableOpacity>
                 </View>
               </View>
             </TouchableOpacity>
