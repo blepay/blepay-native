@@ -19,6 +19,8 @@ target 'RNBLEDemo' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  pod 'react-native-bluetooth-classic', :path => '../node_modules/react-native-bluetooth-classic'
+
   target 'RNBLEDemoTests' do
     inherit! :complete
     # Pods for testing

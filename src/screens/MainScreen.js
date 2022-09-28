@@ -6,7 +6,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import { stringToBytes } from "convert-string";
+import RNBluetoothClassic, { BluetoothEventType } from 'react-native-bluetooth-classic';
 
 import {
   StyleSheet,
@@ -31,14 +31,6 @@ import {
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get("window").height;
-
-
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import BleManager from 'react-native-ble-manager';
-import {bytesToString} from 'convert-string';
-
-const BleManagerModule = NativeModules.BleManager;
-const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 const DevicesLocationlist = [
     {
@@ -87,10 +79,6 @@ const DevicesLocationlist = [
     },
 ]
 
-import {
-  CustomHeader,
-  CustomLoader,
-} from 'react-native-reusable-custom-components';
 import {useNavigation} from '@react-navigation/native';
 
 //*** Required Libraries and Device Information
@@ -100,167 +88,43 @@ import {useNavigation} from '@react-navigation/native';
 
 const BletoothMainScreen = props => {
   const [isScanning, setIsScanning] = useState(false);
-  const [notifyValueFromBLE, setNotifyValue] = useState('');
-  const peripherals = new Map();
   const [list, setList] = useState([]);
-  const [randomNumber, setRandom] = useState(Date.now());
   const [isBluetoothStarted, setBluetoothtoggle] = React.useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [helpModalVisible, toggleHelpModal] = useState(false);
-  const [isRenameModalVisible, setRenameModalVisible] = useState(false);
-  const [renameValue, setRenameValue] = useState('');
-  const [selectedPeripheral, setSelectedPeripheral] = useState(null);
-
   const navigation = useNavigation();
-
-  const serviceUUIDForWriteBlubColor = 'ffb0';
-  const characteristicUUIDForWriteBlubColor = 'ffb2';
-  const characteristicUUIDForChangeBlubName = 'ffb7';
+  // let d = await RNBluetoothClassic.accept();
 
   useEffect(() => {
-    /**
-        //* Initialize the BLE 
-         */
-    BleManager.start({showAlert: true, forceLegacy: true});
-
-    checkForBluetoothPermission();
-  }, []);
-
-  useEffect(() => {
-    /**Initialize the BLE */
-    BleManager.start({showAlert: true, forceLegacy: true});
-
-    /**
-     */ /* Listener to handle the opeation when device is connected , disconnected Handle stop scan
-, when any value will update from BLE device
-*/
-    const ble1 = bleManagerEmitter.addListener(
-      'BleManagerDiscoverPeripheral',
-      handleDiscoverPeripheral,
-    );
-    const ble2 = bleManagerEmitter.addListener(
-      'BleManagerStopScan',
-      handleStopScan,
-    );
-    const ble3 = bleManagerEmitter.addListener(
-      'BleManagerDisconnectPeripheral',
-      handleDisconnectedPeripheral,
-    );
-    const ble4 = bleManagerEmitter.addListener(
-      'BleManagerDidUpdateValueForCharacteristic',
-      handleUpdateValueForCharacteristic,
-    );
-
-    //*Checking the Bluetooth Permission
-    checkForBluetoothPermission();
-
-    return () => {
-      ble1.remove();
-      ble2.remove();
-      ble3.remove();
-      ble4.remove();
-    };
-  }, []);
-
-  /**
-   * //* Handle the bluetooth Stop scan
-   */
-  const handleStopScan = () => {
-    setIsScanning(false);
-    setIsRefreshing(false);
-  };
-
-  /**
-   * //* method to Handle when peripheral will disconnected
-   */
-  const handleDisconnectedPeripheral = data => {
-    let peripheral = peripherals.get(data.peripheral);
-    if (peripheral) {
-      peripheral.connected = false;
-      peripherals.set(peripheral.id, peripheral);
-      setList(Array.from(peripherals.values()).slice(0, 5));
+      checkForBluetoothPermission();
+      try {
+        let unpaired;
+        const getList = async () => {
+          return await RNBluetoothClassic.startDiscovery();
+        }
+        getList().then(res => { 
+          setList(res);
+        }) 
+        // console.log('unpaired', unpaired)
+        // setList(unpaired);
+  
+        // console.log('sendresulte', sendResult)
+    } catch (err) {
+        // Error if Bluetooth is not enabled
+        // Or there are any issues requesting paired devices
     }
-    alert('BLE Device is Disconnected');
-    props.navigation.goBack();
-  };
-
-  /**
-   * //* Method to handle Value which we get from Peripheral Device
-   */
-  const handleUpdateValueForCharacteristic = data => {
-    setNotifyValue('');
-    const converteddata = bytesToString(data.value);
-
-    function bytesToWritableArray(bytes) {
-      let value = [];
-      for (let index = 0; index < bytes.length; index++) {
-        value.push(parseInt(bytes[index], 8));
-      }
-      return value;
-    }
-
-    var arr = bytesToWritableArray(data.dataValue);
-
-    function bin2String(array) {
-      var result = '';
-      for (var i = 0; i < array.length; i++) {
-        result += String.fromCharCode(parseInt(array[i], 2));
-      }
-      return result;
-    }
-
-    let bytesView = new Uint8Array(data.value);
-    let str = new TextDecoder().decode(bytesView);
-    setNotifyValue(str);
-
-    alert('successfully read: ' + str);
-  };
+  }, [])
 
   /**
    */ /* Enable the Bluetooth Permission
    */
   const enableBluetoothInDevice = () => {
-    BleManager.enableBluetooth()
-      .then(() => {
-        // Success code
-        console.log('enable')
-        setBluetoothtoggle(true);
-        //** Start the scanning */
-        startScan();
-      })
-      .catch(error => {
-        console.log('rror-r---->', error);
-      });
   };
   /**
    * //* Start the bluetooth scanning
    */
   const startScan = () => {
-    if (!isScanning) {
-      BleManager.scan([], 10, true)
-        .then(results => {
-          console.log('Scanning...', results);
-          setIsScanning(true);
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    }
   };
 
-  /**
-   * //* Method to handle when Peripheral is connected.
-   */
-  const handleDiscoverPeripheral = peripheral => {
-    peripherals.set(peripheral.id, peripheral);
-    setList(Array.from(peripherals.values()).slice(0, 5));
-    setRandom(Date.now());
-  };
-
-  const onRefresh = () => {
-    setIsRefreshing(true);
-    startScan();
-  };
 
   /**
    * //* Check the Bluetooth Permission For Android and  request if required.
@@ -292,185 +156,26 @@ const BletoothMainScreen = props => {
     }
   };
 
-  /**
-   * //* Render data when no device connected
-   */
-  const renderListEmptyComponent = () => {
-    return (
-      <View style={styles.emptyMainView}>
-        {isScanning ? (
-          <Text style={styles.scanningText}>
-            {'Scanning for devices...'}
-          </Text>
-        ) : (
-          <View>
-            <Text style={styles.noBlubText}>{'No devices Found. 555'}</Text>
-            <Text style={styles.pleaseMakeText}>
-              {'Please make sure devicess are powered on.'}
-            </Text>
-
-            <Text style={styles.touubleShootHelp}>
-              {'Troubleshooting Help'}
-            </Text>
-            <Text style={styles.descText}>{'1. Restart the bluetooth'}</Text>
-            <Text style={styles.descText}>{'2. Click on Refresh Icon.'}</Text>
-            <Text style={styles.descText}>{'3. Restart devices.'}</Text>
-            <Text style={styles.descText}>
-              {'4. Unintstall app and reinstall again.'}
-            </Text>
-          </View>
-        )}
-      </View>
-    );
-  };
-
-  /**
-   * //* Render single item of list of connected BLE Periphrals
-   */
-  const renderBlubList = ({item, index}) => {
-    let isDevice = item.id == '8C:8B:83:47:0F:BC' ? true : false;
-    return (
-      <TouchableOpacity
-        style={{
-          ...styles.bulbWrapView,
-          backgroundColor: isDevice ? 'gray' : 'white',
-        }}
-        onPress={() => onPressSingleBlub(item, index)}>
-        <View style={styles.bulbView}>
-          <Image source={images.smartBlubIcon} style={styles.smartBlubIcon} />
-          <Text style={styles.bulbText}>{'Smart Bulb ' + (index + 1)}</Text>
-        </View>
-        {item.isConnecting ? (
-          <View style={styles.activityindicator}>
-            <ActivityIndicator />
-          </View>
-        ) : null}
-        {
-          <TouchableOpacity
-            onPress={() => {
-              setRenameModalVisible(true);
-              setSelectedPeripheral(item);
-            }}
-            style={styles.ranameView}>
-            <Text style={styles.renameText}>{'Rename'}</Text>
-          </TouchableOpacity>
-        }
-      </TouchableOpacity>
-    );
-  };
 
   //* method to handle click event when user click on single blub
   const onPressSingleBlub = (item, index) => {
-    connectBLEDevice(item, index);
+    console.log(item, index)
   };
 
   //* method to handle click event when user click on single blub
   const connectBLEDevice = (item, index) => {
-    toggleConnecting(true, index);
-    /**
-     * //* Checking if Peripheral is connected Or not
-     */
-    BleManager.isPeripheralConnected(item.id, [])
-      .then(res => {
-        if (res == false) {
-          /**
-           * //* Method to connect with Peripheral
-           */
-          BleManager.connect(item.id)
-            .then(res7 => {
-              //* Connection is established
-              redirectUserToNext(item, index);
-            })
-            .catch(error => {
-              console.log('Error---BLE connect--->', error);
-              toggleConnecting(false, index);
-              ToastAndroid.show(
-                'Something went wrong while connecting..',
-                ToastAndroid.SHORT,
-              );
-            });
-        } else {
-          //* Connection already is established
-          redirectUserToNext(item, index);
-        }
-      })
-      .catch(error => {
-        toggleConnecting(false, index);
-        ToastAndroid.show(
-          'Something went wrong while connecting..',
-          ToastAndroid.SHORT,
-        );
-      });
   };
 
-  //* after Connection is established , redirect user to next screen
-  const redirectUserToNext = (item, index) => {
-    toggleConnecting(false, index);
-    ToastAndroid.show('Connected successfully', ToastAndroid.SHORT);
-    navigation.navigate('BLEDeviceService', {
-      peripheral: item,
-    });
-  };
-
-  const toggleConnecting = (value, index) => {
-    let temp = list;
-    temp[index].isConnecting = value;
-    setList(temp);
-    setRandom(Date.now());
-  };
-
-  const onRequestClose = () => {
-    toggleHelpModal(false);
-    setRenameModalVisible(false);
-    setSelectedPeripheral(null);
-    setRenameValue('');
-  };
-
-  const onRequestCloseRenameModal = () => {
-    setRenameModalVisible(false);
-  };
-
-  const getCharCodes = s => {
-    let charCodeArr = [];
-    for (let i = 0; i < s.length; i++) {
-      let code = s.charCodeAt(i);
-      charCodeArr.push(code);
-    }
-    return charCodeArr;
-  };
-
-  const onPressDeviceBubble = (device) => {
+  const onPressDeviceBubble = async (device) => {
     console.log('ddd', device)
-    if (device) {
-      /**
-       */ /* Again checking that BLE peripheral is connected or not
-       */
-      BleManager.isPeripheralConnected(device.id, [])
-        .then(res => {
-          console.log(`${device.name} is connected???`, res);
-
-          if (res == false) {
-            console.log('******not connected so going to connect...........');
-            /**
-             * //*method to connect the peripheral with our app
-             */
-            BleManager.connect(device.id)
-              .then(res7 => {
-                // Success code
-                console.log('connect started', res7);
-                sendDataToDevice(devicw);
-              })
-              .catch(error => {
-                console.log('error---456464454->', error);
-              });
-          } else {
-            sendDataToDevice(device);
-          }
-        })
-        .catch(error => {
-          console.log('Error--->', error);
-        });
-    }
+    connection = await device.connect();
+    console.log('conne', connection)
+    setTimeout(async () => {
+      await RNBluetoothClassic.writeToDevice(
+        device.address,
+        'fffff'
+      );
+    }, 100000);
   };
 
   /**
@@ -479,37 +184,6 @@ const BletoothMainScreen = props => {
    */
   const sendDataToDevice = (device) => {
     console.log('click device', device)
-// Convert data to byte array before write/writeWithoutResponse
-    const data = stringToBytes('0xss_ble_sol');
-    console.log('send data', data);
-    BleManager.retrieveServices(device.id).then(
-      (peripheralInfo) => {
-        // Success code
-        console.log("Peripheral info:", peripheralInfo);
-      }
-    );
-    BleManager.write(
-      device.id,
-      '0000ffe0-0000-1000-8000-00805f9b34fb',
-      '0000ffe1-0000-1000-8000-00805f9b34fb',
-      data,
-    )
-      .then(characteristic => {
-        ToastAndroid.show(
-          'Blub name changed successfully.',
-          ToastAndroid.SHORT,
-        );
-        startScan();
-        onRequestClose();
-      })
-      .catch(error => {
-        console.log('Error--write name->', error);
-        ToastAndroid.show(
-          'Something went wrong while writing values..',
-          ToastAndroid.SHORT,
-        );
-        onRequestClose();
-      });
   };
 
   console.log('list ------>', list);
@@ -517,24 +191,18 @@ const BletoothMainScreen = props => {
   return (
     <View style={styles.container}>
       <View
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={() => onRefresh()}
-          />
-        }
         style={styles.contentContainerStyle}>
         {list.map((device, idx) => (
-              <TouchableOpacity style={[styles.deviceBubble, 
+              <TouchableOpacity 
+              onPress={() => onPressDeviceBubble(device)}
+              style={[styles.deviceBubble, 
                 DevicesLocationlist[idx]
               ]} key={device.id}
-              onPress={() => onPressDeviceBubble(device)}
               >
                 <Text style={[styles.deviceName, idx === 1 ? styles.notSetDomainText : '']}>{device.name || device.id}</Text>
               </TouchableOpacity>
             ))}
       </View>
-      {isScanning ? <CustomLoader loading={isScanning} /> : null}
       <View style={styles.scamWrapView}>
       <View style={styles.walletInfo}>
         <Text style={styles.walletAddrName}>ironman.ble</Text>
@@ -570,41 +238,6 @@ const BletoothMainScreen = props => {
       </View>
 
       <View>
-        <Modal
-          visible={helpModalVisible}
-          animationType={'slide'}
-          onRequestClose={onRequestClose}
-          transparent={true}>
-          <TouchableHighlight
-            underlayColor={'transparent'}
-            onPress={onRequestClose}
-            style={styles.outerViewModalStyle}>
-            <TouchableOpacity
-              delayPressIn={0}
-              onPress={() => null}
-              activeOpacity={1}>
-              <View style={styles.modal}>
-                <View style={{paddingHorizontal: 20}}>
-                  <Text style={styles.troubleShotHelp}>
-                    {'Troubleshooting Help'}
-                  </Text>
-                  <Text style={styles.descText}>
-                    {'1. Restart the bluetooth'}
-                  </Text>
-                  <Text style={styles.descText}>
-                    {'2. Click on Refresh Icon.'}
-                  </Text>
-                  <Text style={styles.descText}>
-                    {'3. Restart Smart bulb.'}
-                  </Text>
-                  <Text style={styles.descText}>
-                    {'4. Unintstall app and reinstall again.'}
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          </TouchableHighlight>
-        </Modal>
       </View>
     </View>
   );
@@ -619,7 +252,6 @@ const styles = StyleSheet.create({
     right: 0,
   },
   body: {
-    backgroundColor: Colors.white,
   },
   sectionContainer: {
     marginTop: 32,
@@ -628,19 +260,16 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 24,
     fontWeight: '600',
-    color: Colors.black,
   },
   sectionDescription: {
     marginTop: 8,
     fontSize: 18,
     fontWeight: '400',
-    color: Colors.dark,
   },
   highlight: {
     fontWeight: '700',
   },
   footer: {
-    color: Colors.dark,
     fontSize: 12,
     fontWeight: '600',
     padding: 4,
