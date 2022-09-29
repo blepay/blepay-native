@@ -6,7 +6,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import RNBluetoothClassic, { BluetoothEventType } from 'react-native-bluetooth-classic';
+import RNBluetoothClassic, { BluetoothEventType, BluetoothDevice } from 'react-native-bluetooth-classic';
 
 import {
   StyleSheet,
@@ -81,14 +81,15 @@ const DevicesLocationlist = [
 
 import {useNavigation} from '@react-navigation/native';
 
-//*** Required Libraries and Device Information
-// We used react-native-ble-manager library to connect central and peripheral device, to make BLE
-// We used Mansaa devices to make this demo and perform operation
-// We used react-native-color-picker to display color picker
-
 const BletoothMainScreen = props => {
+  let disconnectSubscription;
+  let readInterval;
+  let readSubscription;
   const [isScanning, setIsScanning] = useState(false);
+  const [polling, setPolling] = useState(false);
   const [list, setList] = useState([]);
+  const [device, setDevice] = useState({});
+  const [data, setData] = useState([]);
   const [isBluetoothStarted, setBluetoothtoggle] = React.useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const navigation = useNavigation();
@@ -97,22 +98,98 @@ const BletoothMainScreen = props => {
   useEffect(() => {
       checkForBluetoothPermission();
       try {
-        let unpaired;
         const getList = async () => {
           return await RNBluetoothClassic.startDiscovery();
         }
         getList().then(res => { 
           setList(res);
         }) 
-        // console.log('unpaired', unpaired)
-        // setList(unpaired);
-  
-        // console.log('sendresulte', sendResult)
     } catch (err) {
         // Error if Bluetooth is not enabled
         // Or there are any issues requesting paired devices
     }
   }, [])
+
+
+  useEffect(() => {
+    initializeRead();
+  }, [])
+
+  const initializeRead = async () => {
+    let subscription = await BluetoothDevice
+    .onBluetoothEnabled((event) => this.onStateChanged(event));
+    await subscription.onDataReceived((event) => {
+      console.log(event);
+      onReceivedData(event);
+    });
+    // disconnectSubscription = RNBluetoothClassic.onDeviceDisconnected(() => disconnect(true));
+    // if (polling) {
+    //   readInterval = setInterval(() => performRead(), 5000);
+    // } else {
+    //   readSubscription = await RNBluetoothClassic.onDataReceived(data =>
+    //     onReceivedData(data)
+    //   );
+    // }
+  }
+
+  const performRead = async () => {
+    try {
+      console.log('Polling for available messages');
+      let available = await device.available();
+      console.log(`There is data available [${available}], attempting read`);
+
+      if (available > 0) {
+        for (let i = 0; i < available; i++) {
+          console.log(`reading ${i}th time`);
+          let data = await device.read();
+          console.log(`Read data ${data}`);
+          console.log(data);
+          this.onReceivedData({ data });
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const onReceivedData = async (event) => {
+    console.log('received', event)
+    event.timestamp = new Date();
+    addData({
+      ...event,
+      timestamp: new Date(),
+      type: 'receive',
+    });
+  }
+
+  const addData = async (message) => {
+    setData([message, ...data])
+  }
+
+  const disconnect = async (disconnected) => {
+    try {
+      if (!disconnected) {
+        disconnected = await this.props.device.disconnect();
+      }
+
+      addData({
+        data: 'Disconnected',
+        timestamp: new Date(),
+        type: 'info',
+      });
+
+      this.setState({ connection: !disconnected });
+    } catch (error) {
+      this.addData({
+        data: `Disconnect failed: ${error.message}`,
+        timestamp: new Date(),
+        type: 'error',
+      });
+    }
+
+    // Clear the reads, so that they don't get duplicated
+    uninitializeRead();
+  }
 
   /**
    */ /* Enable the Bluetooth Permission
@@ -156,37 +233,26 @@ const BletoothMainScreen = props => {
     }
   };
 
-
-  //* method to handle click event when user click on single blub
-  const onPressSingleBlub = (item, index) => {
-    console.log(item, index)
-  };
-
-  //* method to handle click event when user click on single blub
-  const connectBLEDevice = (item, index) => {
-  };
-
   const onPressDeviceBubble = async (device) => {
-    console.log('ddd', device)
     connection = await device.connect();
-    console.log('conne', connection)
-    setTimeout(async () => {
-      await RNBluetoothClassic.writeToDevice(
-        device.address,
-        'fffff'
-      );
-    }, 100000);
+    console.log('connection', connection)
+    sendDataToDevice(device)
   };
 
   /**
    * Rename the blub name
    * Here we have to pass 19 byte array with ascii value of string as per Hardware/Peripheral Requirement.
    */
-  const sendDataToDevice = (device) => {
+  const sendDataToDevice = async (device) => {
     console.log('click device', device)
+    let result = await RNBluetoothClassic.writeToDevice(
+      device.address,
+      'A1_BlePay_0x72d39aaf15299BE7F1541D0587584499040570a2'
+    );
+    console.log('result', result)
   };
 
-  console.log('list ------>', list);
+  // console.log('list ------>', list);
   
   return (
     <View style={styles.container}>
