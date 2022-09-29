@@ -81,3 +81,5 @@ dist/
 # @end expo-cli
 
 android
+
+.vscode
