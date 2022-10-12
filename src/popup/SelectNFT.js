@@ -11,7 +11,7 @@ import {
   Text,
   Dimensions,
 } from "react-native";
-import { isEmpty } from "../common/PublicMethod";
+// import { isEmpty } from "../common/PublicMethod";
 import {
   useFonts,
   ReadexPro_200ExtraLight,
@@ -159,7 +159,7 @@ export const SelectNft = (props) => {
         <TouchableOpacity
           style={[styles.button]}
           onPress={() => {
-            if (isEmpty(selectedItem)) return;
+            // if (isEmpty(selectedItem)) return;
             confirmSelected();
             props.close();
           }}

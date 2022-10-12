@@ -1,9 +1,12 @@
 import React, { } from 'react';
 import {
-  View, StyleSheet, StatusBar, LogBox
+  View, StyleSheet, StatusBar, LogBox, TouchableHighlight
 } from 'react-native';
 import AppContainer from './src/navigator/AppNavigator';
 import 'react-native-gesture-handler';
+
+
+
 LogBox.ignoreAllLogs(true)
 export default function RNApp() {
 

@@ -93,6 +93,17 @@ import {
 } from 'react-native-reusable-custom-components';
 import {useNavigation} from '@react-navigation/native';
 
+const { CalendarModule, BluetoothModule } = NativeModules;
+
+const onPress = async () => {
+  // BluetoothModule.open()
+  let isSupport = await CalendarModule.support();
+  // await CalendarModule.open();
+  let deviceList = await CalendarModule.scan((device) => {console.log('found', device)})
+  console.log(deviceList)
+  console.log('onPressss', CalendarModule.show('开锁',2))
+};
+
 //*** Required Libraries and Device Information
 // We used react-native-ble-manager library to connect central and peripheral device, to make BLE
 // We used Mansaa devices to make this demo and perform operation
@@ -440,6 +451,8 @@ const BletoothMainScreen = props => {
   };
 
   const onPressDeviceBubble = (device) => {
+    onPress();
+    return;
     console.log('ddd', device)
     if (device) {
       /**
@@ -512,7 +525,7 @@ const BletoothMainScreen = props => {
       });
   };
 
-  console.log('list ------>', list);
+  // console.log('list ------>', list);
   
   return (
     <View style={styles.container}>
@@ -535,6 +548,7 @@ const BletoothMainScreen = props => {
             ))}
       </View>
       {isScanning ? <CustomLoader loading={isScanning} /> : null}
+      {/* <TouchableHighlight onPress={onPress}></TouchableHighlight> */}
       <View style={styles.scamWrapView}>
       <View style={styles.walletInfo}>
         <Text style={styles.walletAddrName}>ironman.ble</Text>
