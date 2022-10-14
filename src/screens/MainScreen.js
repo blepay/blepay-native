@@ -289,6 +289,78 @@ const BletoothMainScreen = props => {
     }
   };
 
+  /**
+   * //* Render data when no device connected
+   */
+  const renderListEmptyComponent = () => {
+    return (
+      <View style={styles.emptyMainView}>
+        {isScanning ? (
+          <Text style={styles.scanningText}>
+            {'Scanning for devices...'}
+          </Text>
+        ) : (
+          <View>
+            <Text style={styles.noBlubText}>{'No devices Found. 555'}</Text>
+            <Text style={styles.pleaseMakeText}>
+              {'Please make sure devicess are powered on.'}
+            </Text>
+
+            <Text style={styles.touubleShootHelp}>
+              {'Troubleshooting Help'}
+            </Text>
+            <Text style={styles.descText}>{'1. Restart the bluetooth'}</Text>
+            <Text style={styles.descText}>{'2. Click on Refresh Icon.'}</Text>
+            <Text style={styles.descText}>{'3. Restart devices.'}</Text>
+            <Text style={styles.descText}>
+              {'4. Unintstall app and reinstall again.'}
+            </Text>
+          </View>
+        )}
+      </View>
+    );
+  };
+
+  /**
+   * //* Render single item of list of connected BLE Periphrals
+   */
+  const renderBlubList = ({item, index}) => {
+    let isDevice = item.id == '8C:8B:83:47:0F:BC' ? true : false;
+    return (
+      <TouchableOpacity
+        style={{
+          ...styles.bulbWrapView,
+          backgroundColor: isDevice ? 'gray' : 'white',
+        }}
+        onPress={() => onPressSingleBlub(item, index)}>
+        <View style={styles.bulbView}>
+          <Image source={images.smartBlubIcon} style={styles.smartBlubIcon} />
+          <Text style={styles.bulbText}>{'Smart Bulb ' + (index + 1)}</Text>
+        </View>
+        {item.isConnecting ? (
+          <View style={styles.activityindicator}>
+            <ActivityIndicator />
+          </View>
+        ) : null}
+        {
+          <TouchableOpacity
+            onPress={() => {
+              setRenameModalVisible(true);
+              setSelectedPeripheral(item);
+            }}
+            style={styles.ranameView}>
+            <Text style={styles.renameText}>{'Rename'}</Text>
+          </TouchableOpacity>
+        }
+      </TouchableOpacity>
+    );
+  };
+
+  //* method to handle click event when user click on single blub
+  const onPressSingleBlub = (item, index) => {
+    connectBLEDevice(item, index);
+  };
+
   //* method to handle click event when user click on single blub
   const connectBLEDevice = (item, index) => {
     toggleConnecting(true, index);
@@ -351,11 +423,65 @@ const BletoothMainScreen = props => {
     setRenameValue('');
   };
 
+  const onRequestCloseRenameModal = () => {
+    setRenameModalVisible(false);
+  };
+
+  const getCharCodes = s => {
+    let charCodeArr = [];
+    for (let i = 0; i < s.length; i++) {
+      let code = s.charCodeAt(i);
+      charCodeArr.push(code);
+    }
+    return charCodeArr;
+  };
+
   const onPressDeviceBubble = async (device) => {
     // let isSupport = await CalendarModule.open();
     // console.log('isSupport', isSupport)
     navigation.navigate("SendToken", { device: device });
   };
+
+  /**
+   * Rename the blub name
+   * Here we have to pass 19 byte array with ascii value of string as per Hardware/Peripheral Requirement.
+   */
+  const sendDataToDevice = (device) => {
+    console.log('click device', device)
+// Convert data to byte array before write/writeWithoutResponse
+    const data = stringToBytes('0xss_ble_sol');
+    console.log('send data', data);
+    BleManager.retrieveServices(device.id).then(
+      (peripheralInfo) => {
+        // Success code
+        console.log("Peripheral info:", peripheralInfo);
+      }
+    );
+    BleManager.write(
+      device.id,
+      '0000ffe0-0000-1000-8000-00805f9b34fb',
+      '0000ffe1-0000-1000-8000-00805f9b34fb',
+      data,
+    )
+      .then(characteristic => {
+        ToastAndroid.show(
+          'Blub name changed successfully.',
+          ToastAndroid.SHORT,
+        );
+        startScan();
+        onRequestClose();
+      })
+      .catch(error => {
+        console.log('Error--write name->', error);
+        ToastAndroid.show(
+          'Something went wrong while writing values..',
+          ToastAndroid.SHORT,
+        );
+        onRequestClose();
+      });
+  };
+
+  // console.log('list ------>', list);
   
   return (
     <View style={styles.container}>
