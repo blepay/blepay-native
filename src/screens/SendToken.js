@@ -61,8 +61,6 @@ const TokenRoute = (props) => {
   }, [])
 
   const walletDialogConfirm = async () => {
-  //  场景1: 无网a给有网b转账，此时无网通过蓝牙把raw 给有网b ，有网b ‘广播’到区块链
-  //  场景2: 有网a给无网b转账，此时无需和无网b通信吧 ，只需要知道无网b的地址，交易即可
     let rawTx = await createRawTransaction(amount * 1e9, toAddr);
     if (isConnected) {
       // send by ble.
