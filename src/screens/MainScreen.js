@@ -95,20 +95,6 @@ import {useNavigation} from '@react-navigation/native';
 
 const { CalendarModule, BluetoothModule } = NativeModules;
 
-const onPress = async () => {
-  // BluetoothModule.open()
-  let isSupport = await CalendarModule.support();
-  // await CalendarModule.open();
-  let deviceList = await CalendarModule.scan((device) => {console.log('found', device)})
-  console.log(deviceList)
-  console.log('onPressss', CalendarModule.show('开锁',2))
-};
-
-//*** Required Libraries and Device Information
-// We used react-native-ble-manager library to connect central and peripheral device, to make BLE
-// We used Mansaa devices to make this demo and perform operation
-// We used react-native-color-picker to display color picker
-
 const BletoothMainScreen = props => {
   const [isScanning, setIsScanning] = useState(false);
   const [notifyValueFromBLE, setNotifyValue] = useState('');
@@ -450,40 +436,10 @@ const BletoothMainScreen = props => {
     return charCodeArr;
   };
 
-  const onPressDeviceBubble = (device) => {
-    onPress();
-    return;
-    console.log('ddd', device)
-    if (device) {
-      /**
-       */ /* Again checking that BLE peripheral is connected or not
-       */
-      BleManager.isPeripheralConnected(device.id, [])
-        .then(res => {
-          console.log(`${device.name} is connected???`, res);
-
-          if (res == false) {
-            console.log('******not connected so going to connect...........');
-            /**
-             * //*method to connect the peripheral with our app
-             */
-            BleManager.connect(device.id)
-              .then(res7 => {
-                // Success code
-                console.log('connect started', res7);
-                sendDataToDevice(devicw);
-              })
-              .catch(error => {
-                console.log('error---456464454->', error);
-              });
-          } else {
-            sendDataToDevice(device);
-          }
-        })
-        .catch(error => {
-          console.log('Error--->', error);
-        });
-    }
+  const onPressDeviceBubble = async (device) => {
+    // let isSupport = await CalendarModule.open();
+    // console.log('isSupport', isSupport)
+    navigation.navigate("SendToken", { device: device });
   };
 
   /**
@@ -548,7 +504,6 @@ const BletoothMainScreen = props => {
             ))}
       </View>
       {isScanning ? <CustomLoader loading={isScanning} /> : null}
-      {/* <TouchableHighlight onPress={onPress}></TouchableHighlight> */}
       <View style={styles.scamWrapView}>
       <View style={styles.walletInfo}>
         <Text style={styles.walletAddrName}>ironman.ble</Text>
