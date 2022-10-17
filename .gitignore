@@ -79,3 +79,7 @@ web-build/
 dist/
 
 # @end expo-cli
+/android/ble/src/main/java/com/example/bluetoothlechat/*
+/android/ble/src/main/res/*
+/android/ble/release/
+/android/ble/proguard-rules.pro

@@ -286,10 +286,13 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-
+//    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+
+    implementation project(":ble")
+
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
@@ -334,6 +337,9 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    // 蓝牙第三方库
+   // implementation 'com.inuker.bluetooth:library:1.4.0'
 }
 
 if (isNewArchitectureEnabled()) {

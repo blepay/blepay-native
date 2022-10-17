@@ -22,6 +22,11 @@ import {
 import { TrxProgressPopup } from "../popup/TxProgressPopup";
 import { ModalBox } from "../popup/Modal";
 import { SelectNft } from "../popup/SelectNFT";
+import { walletTransfer, createRawTransaction } from "../solana/WalletHandler";
+import NetInfo from "@react-native-community/netinfo";
+import * as web3 from "@solana/web3.js";
+
+
 const windowWidth = Dimensions.get("window").width;
 const selectOptList = [
   {
@@ -44,10 +49,40 @@ const TokenRoute = (props) => {
   };
   const [dropdownVisible, setDropDownVisible] = useState(false);
   const [dropdownSelectOpt, setDropDownSelectOpt] = useState(selectOptList[0]);
+  const [amount, onChangeAmount] = useState("");
+  const [isConnected, setConnectType] = useState(true);
+
+  useEffect(() => {
+    NetInfo.fetch().then(state => {
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+      setConnectType(state.isConnected)
+    });
+  }, [])
+
+  const walletDialogConfirm = async () => {
+    let rawTx = await createRawTransaction(amount * 1e9, toAddr);
+    if (isConnected) {
+      // send by ble.
+    } else {
+      const connection = getConnection();
+      const opts = {
+        preflightCommitment: 'recent',
+        commitment: 'recent',
+      }
+      const signature = await web3.sendAndConfirmRawTransaction(
+        connection,
+        rawTx,
+        opts
+      )
+      console.log(signature);
+    }
+  }
+
   return (
     <View style={styles.tokenPageBox}>
       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} placeholder="0.00" />
+        <TextInput style={styles.input} placeholder="0.00" onChangeText={onChangeAmount} value={amount} />
         <TouchableOpacity
           style={styles.selectTokenBar}
           onPress={() => setDropDownVisible(!dropdownVisible)}
@@ -155,7 +190,7 @@ const TokenRoute = (props) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, { marginTop: (36 / 390) * windowWidth }]}
-          onPress={() => {}}
+          onPress={() => {walletDialogConfirm}}
         >
           <Text style={styles.textInput}>{"Confirm "}</Text>
         </TouchableOpacity>
@@ -284,6 +319,8 @@ const initialLayout = { width: Dimensions.get("window").width };
 import { TabView, SceneMap } from "react-native-tab-view";
 
 const SendToken = (props) => {
+  const ToDeviceMacId = props.route.params.device.id;
+  console.log('toDevice', ToDeviceMacId)
   let [fontsLoaded] = useFonts({
     ReadexPro_200ExtraLight,
     ReadexPro_300Light,
@@ -554,3 +591,5 @@ const styles = StyleSheet.create({
     display: "none",
   },
 });
+
+

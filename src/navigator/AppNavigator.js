@@ -22,9 +22,9 @@ function AppContainer() {
                     headerShown: false,
                 }}
             >
+                <Stack.Screen name="BluetoothMainScreen" component={BluetoothMainScreen} />
                 <Stack.Screen name="SendToken" component={SendToken} />
                 <Stack.Screen name="BluetoothModule" component={BluetoothModule} />
-                <Stack.Screen name="BluetoothMainScreen" component={BluetoothMainScreen} />
                 <Stack.Screen name="Wallet" component={Wallet} />
                 <Stack.Screen name="ImportWallet" component={ImportWalletScreen} />
                 <Stack.Screen name="CreateWallet" component={CreateWalletScreen} />
