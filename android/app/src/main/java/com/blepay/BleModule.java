@@ -63,7 +63,7 @@ import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.search.response.SearchResponse;
 
 
-public class CalendarModule extends ReactContextBaseJavaModule {
+public class BleModule extends ReactContextBaseJavaModule {
 
     public static final String NAME = "Bluetooth";
 
@@ -102,7 +102,7 @@ public class CalendarModule extends ReactContextBaseJavaModule {
 //            adapter.addMessage(message)
 //    }
 
-    CalendarModule(ReactApplicationContext context) {
+    BleModule(ReactApplicationContext context) {
         super(context);
         mClient = new BluetoothClient(context);
         bluetoothManager = (BluetoothManager) getReactApplicationContext().getSystemService(Context.BLUETOOTH_SERVICE);
@@ -119,13 +119,13 @@ public class CalendarModule extends ReactContextBaseJavaModule {
         return mClient;
     }
 
-    // add to CalendarModule.java
+    // add to BleModule.java
     @Override
     public String getName() {
-        return "CalendarModule";
+        return "BleModule";
     }
 
-    @ReactMethod(isBlockingSynchronousMethod = true)
+    @ReactMethod
     public boolean support() {
         //getReactApplicationContext()；
         // BluetoothManager bluetoothManager = (BluetoothManager) getReactApplicationContext().getSystemService(Context.BLUETOOTH_SERVICE);
@@ -167,6 +167,8 @@ public class CalendarModule extends ReactContextBaseJavaModule {
 
     }
 
-
-
+    @ReactMethod
+    public void show(String message, int duration) {
+        Toast.makeText(getReactApplicationContext(), message, duration).show();
+    }
 }

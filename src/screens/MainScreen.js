@@ -93,7 +93,7 @@ import {
 } from 'react-native-reusable-custom-components';
 import {useNavigation} from '@react-navigation/native';
 
-const { CalendarModule, BluetoothModule } = NativeModules;
+const { BleModule } = NativeModules;
 
 const BletoothMainScreen = props => {
   const [isScanning, setIsScanning] = useState(false);
@@ -437,8 +437,11 @@ const BletoothMainScreen = props => {
   };
 
   const onPressDeviceBubble = async (device) => {
-    // let isSupport = await CalendarModule.open();
-    // console.log('isSupport', isSupport)
+    let isSupport =  await BleModule.support();
+    console.log('isSupport', isSupport)
+    // let isOpen= await BleModule.open();
+    // console.log('isOpen', isOpen)
+    return;
     navigation.navigate("SendToken", { device: device });
   };
 
